@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tic-tac-toe-gke
+  labels:
+    app: tic-tac-toe
+spec:
+  selector:
+    matchLabels:
+      app: tic-tac-toe
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: tic-tac-toe
+    spec:
+      containers:
+        - name: tic-tac-toe-gke
+          image: eu.gcr.io/tic-tac-toe-268522/tic-tac-toe-gke@sha256:6f3e56c3fc018e04b6460e4430a6a43377cdde685580105d4d9fddced3b3e38a
+          imagePullPolicy: IfNotPresent
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /tic-tac-toe/api/healthcheck
+            initialDelaySeconds: 7
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /tic-tac-toe/api/healthcheck
+            initialDelaySeconds: 7
+          ports:
+            - containerPort: 8080
